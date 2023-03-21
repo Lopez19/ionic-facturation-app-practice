@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: '',
     component: HomePage,
+  },
+  {
+    path: 'fac-detail',
+    loadChildren: () => import('./fac-detail/fac-detail.module').then( m => m.FacDetailPageModule)
   }
 ];
 

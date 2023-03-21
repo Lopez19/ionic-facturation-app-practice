@@ -1,7 +1,34 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-title> {{ "facturas" | titlecase }} </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <ion-list>
+    <ion-item
+      *ngFor="let factura of facturas"
+      [routerLink]="['/home/factura', factura.id]"
+    >
+      <ion-avatar slot="start">
+        <img [src]="factura.imageUrl" alt="{{ factura.cliente }}" />
+      </ion-avatar>
+      <ion-label>
+        <h2>{{ factura.cliente }}</h2>
+        <p>{{ factura.fecha | date: 'dd/MM/yyyy' }}</p>
+      </ion-label>
+      <ion-note slot="end">{{ factura.total | currency: 'USD' }} USD</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="addNewFactura()" color="danger">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -5,7 +5,15 @@
         <ion-icon slot="icon-only" name="log-out"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title> {{ "facturas" | titlecase }} </ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button fill="solid">
+        <ion-icon slot="start" name="person-circle"></ion-icon>
+        {{ user.rolId | slice : 0 : 5 }}
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title> {{ user.nombre | titlecase }} </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -26,9 +34,41 @@
     </ion-item>
   </ion-list>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="addNewFactura()" color="danger">
+  <ion-fab
+    vertical="bottom"
+    horizontal="end"
+    slot="fixed"
+    *ngIf="user.rolId === 'Administrador'"
+  >
+    <ion-fab-button color="danger">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
+
+    <ion-fab-list side="top" activated="true">
+      <!-- Boton para facturas -->
+      <ion-fab-button color="primary" [routerLink]="['/home/factura', 'nueva']">
+        <ion-icon name="document-text"></ion-icon>
+      </ion-fab-button>
+
+      <!-- Boton para clientes -->
+      <ion-fab-button color="secondary" [routerLink]="['/usuarios']">
+        <ion-icon name="person-add"></ion-icon>
+      </ion-fab-button>
+
+      <!-- Boton para productos -->
+      <ion-fab-button color="success" [routerLink]="['/productos']">
+        <ion-icon name="wine"></ion-icon>
+      </ion-fab-button>
+
+      <!-- Boton para categorias -->
+      <ion-fab-button color="tertiary" [routerLink]="['/categorias']">
+        <ion-icon name="wine-outline"></ion-icon>
+      </ion-fab-button>
+
+      <!-- Boton para stock -->
+      <ion-fab-button color="warning" [routerLink]="['/stock']">
+        <ion-icon name="cart"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
   </ion-fab>
 </ion-content>

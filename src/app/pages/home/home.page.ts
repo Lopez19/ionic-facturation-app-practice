@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FacturaService } from 'src/app/services/factura.service';
 import { factura } from '../../interfaces/factura.interface';
 import { Router } from '@angular/router';
+import { StorageService } from 'src/app/services/storage.service';
+import { Usuario } from '../../interfaces/usuario.interface';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,46 +13,37 @@ import { Router } from '@angular/router';
 })
 export class HomePage {
   facturas: factura[] = [];
+  user: Usuario = {} as Usuario;
 
-  constructor(private facturaService: FacturaService, private router: Router) {}
+  constructor(
+    private facturaService: FacturaService,
+    private router: Router,
+    private appStorageService: StorageService,
+    private authService: AuthService
+  ) {}
 
-  OnInit() {
-    this.facturas = this.facturaService.getFacturas();
+  async ionViewWillEnter() {
+    this.user = await this.appStorageService.getObject('user');
+    if (this.isAdmin()) {
+      this.facturas = this.facturaService.getFacturas();
+    } else {
+      this.getFacturasByUser();
+    }
   }
 
-  ionViewWillEnter() {
-    this.facturas = this.facturaService.getFacturas();
-  }
-
-  addNewFactura() {
-    // this.facturas.unshift({
-    //   id: 4,
-    //   fecha: '2020-01-04',
-    //   cliente: 'Cliente 4',
-    //   imageUrl: 'https://picsum.photos/200/300',
-    //   description: [
-    //     {
-    //       id: 41,
-    //       descripcion: 'Producto 41',
-    //       cantidad: 1,
-    //       precio: 7000,
-    //     },
-    //     {
-    //       id: 42,
-    //       descripcion: 'Producto 42',
-    //       cantidad: 2,
-    //       precio: 2000,
-    //     },
-    //   ],
-    //   estado: 'Pendiente',
-    //   observaciones: 'Observaciones 4',
-    //   total: 9000,
-    // });
-
+  async addNewFactura() {
     console.log('addNewFactura');
   }
 
   logout() {
-    this.router.navigate(['/login']);
+    this.authService.logout();
+  }
+
+  getFacturasByUser() {
+    this.facturas = this.facturaService.getFacturasByClient(this.user.DNI);
+  }
+
+  isAdmin() {
+    return this.user.rolId === 'Administrador';
   }
 }

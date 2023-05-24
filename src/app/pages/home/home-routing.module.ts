@@ -8,13 +8,14 @@ const routes: Routes = [
     component: HomePage,
   },
   {
-    path: 'fac-detail',
-    loadChildren: () => import('./fac-detail/fac-detail.module').then( m => m.FacDetailPageModule)
-  }
+    path: 'fac-detail/:idFactura',
+    loadChildren: async () =>
+      (await import('./fac-detail/fac-detail.module')).FacDetailPageModule,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class HomePageRoutingModule {}

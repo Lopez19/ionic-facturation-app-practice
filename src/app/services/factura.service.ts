@@ -9,7 +9,7 @@ export class FacturaService {
     {
       id: 1,
       fecha: '2020-01-01',
-      cliente: 'Cliente 1',
+      cliente: '1235139731',
       imageUrl: 'https://picsum.photos/200/300',
       description: [
         {
@@ -32,7 +32,7 @@ export class FacturaService {
     {
       id: 2,
       fecha: '2020-01-02',
-      cliente: 'Cliente 2',
+      cliente: 'Client 2',
       imageUrl: 'https://picsum.photos/200/300',
       description: [
         {
@@ -55,7 +55,7 @@ export class FacturaService {
     {
       id: 3,
       fecha: '2020-01-03',
-      cliente: 'Cliente 3',
+      cliente: '1235139731',
       imageUrl: 'https://picsum.photos/200/300',
       description: [
         {
@@ -92,12 +92,7 @@ export class FacturaService {
   }
 
   addNewFactura(factura: factura) {
-    this._facturas.push({
-      ...factura,
-      id: this._facturas.length + 1,
-      description: [],
-      fecha: new Date().toISOString(),
-    });
+    // ......
   }
 
   updateFactura() {}
@@ -108,9 +103,11 @@ export class FacturaService {
     });
   }
 
-  // getFacturasByDate() {}
-
-  // getFacturasByClient() {}
-
-  // getFacturasByTotal() {}
+  getFacturasByClient(cliente: number) {
+    return [
+      ...this._facturas.filter((factura) => {
+        return factura.cliente === cliente.toString();
+      }),
+    ];
+  }
 }

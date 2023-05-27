@@ -34,6 +34,8 @@ export class NuevaComponent {
   nombre: string = '';
   mensaje: string = '';
 
+  loggedIn$ = this.authService.loggedIn$;
+
   // Constructor
   constructor(
     private router: Router,
@@ -46,7 +48,7 @@ export class NuevaComponent {
   async onClickSave() {
     if (this.form_nueva.valid) {
       this.nombre = this.form_nueva.get('nombre')?.value as string;
-      const token: string = await this.authService.voToken();
+      const token = await this.appStorageService.get('token');
 
       const categoria = {
         nombre: this.nombre,
@@ -60,8 +62,8 @@ export class NuevaComponent {
       if (res) {
         this.form_nueva.reset();
         this.mensaje = `Categoria ${this.nombre} creada correctamente`;
-        this.appStorageService.set('mensaje', this.mensaje);
-        this.router.navigate(['/categorias/viewAll']);
+        await this.appStorageService.set('mensaje', this.mensaje);
+        await this.router.navigate(['/categorias/viewAll']);
       }
     } else {
       console.log('Formulario invalido');

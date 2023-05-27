@@ -21,7 +21,7 @@
   <ion-list>
     <ion-item
       *ngFor="let factura of facturas"
-      [routerLink]="['/home/factura', factura.id]"
+      [routerLink]="['/home/fac-detail', factura.id]"
     >
       <ion-avatar slot="start">
         <img [src]="factura.imageUrl" alt="{{ factura.cliente }}" />

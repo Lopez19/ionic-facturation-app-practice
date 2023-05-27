@@ -4,6 +4,7 @@ import { CapacitorHttp, HttpOptions, HttpResponse } from '@capacitor/core';
 
 // Interfaces
 import { ICategoria } from '../interfaces/categoria.interface';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,8 @@ export class CategoriasService {
   public categorias$ = this._categorias.asObservable();
 
   // Constructor
-  constructor() {
-    this.getCategorias();
+  constructor(private appStorageService: StorageService) {
+    this.getCategorias().catch((error) => console.log(error));
   }
 
   // Metodos
@@ -24,9 +25,13 @@ export class CategoriasService {
 
   async getCategorias() {
     try {
+      const token = await this.appStorageService.get('token');
       let options: HttpOptions = {
         method: 'GET',
         url: 'http://localhost:3000/categorias',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       const response: HttpResponse = await CapacitorHttp.get(options);
@@ -48,11 +53,14 @@ export class CategoriasService {
     }
   }
 
-  async getCategoriaById(id: string) {
+  async getCategoriaById(id: string, tk: string) {
     try {
       let options: HttpOptions = {
         method: 'GET',
         url: `http://localhost:3000/categorias/${id}`,
+        headers: {
+          Authorization: `Bearer ${tk}`,
+        },
       };
 
       const response: HttpResponse = await CapacitorHttp.get(options);
@@ -77,7 +85,7 @@ export class CategoriasService {
 
       const response: HttpResponse = await CapacitorHttp.post(options);
 
-      this.getCategorias();
+      await this.getCategorias();
 
       return response.data;
     } catch (error) {
@@ -85,17 +93,21 @@ export class CategoriasService {
     }
   }
 
-  async updateCategoria(categoria: ICategoria) {
+  async updateCategoria(categoria: ICategoria, tk: string) {
     try {
       let options: HttpOptions = {
         method: 'PUT',
         url: `http://localhost:3000/categorias/${categoria.idcategoria}`,
         data: categoria,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tk}`,
+        },
       };
 
       const response: HttpResponse = await CapacitorHttp.put(options);
 
-      this.getCategorias();
+      await this.getCategorias();
 
       return response.data;
     } catch (error) {
@@ -115,7 +127,7 @@ export class CategoriasService {
 
       const response: HttpResponse = await CapacitorHttp.delete(options);
 
-      this.getCategorias();
+      await this.getCategorias();
 
       return response.data;
     } catch (error) {

@@ -10,6 +10,12 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private appStorageService: StorageService
+  ) {}
+
   regex_username = '^[a-zA-Z0-9]{6,}$';
 
   form_login = new FormGroup({
@@ -27,12 +33,6 @@ export class LoginPage implements OnInit {
   username: string = '';
   password: string = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private appStorageService: StorageService
-  ) {}
-
   ngOnInit() {}
 
   async loginUser() {
@@ -44,16 +44,16 @@ export class LoginPage implements OnInit {
 
       if (res.data.token && res.data.user) {
         // Guardar token en local storage
-        this.appStorageService.set('token', res.data.token);
-        this.appStorageService.set('user', JSON.stringify(res.data.user));
+        await this.appStorageService.set('token', res.data.token);
+        await this.appStorageService.set('user', JSON.stringify(res.data.user));
 
         // Redireccionar a home
-        this.router.navigate(['/home']);
+        await this.router.navigate(['/home']);
         this.form_login.reset();
       }
     } else {
       console.log('Invalid form');
-      this.router.navigate(['/login']);
+      await this.router.navigate(['/login']);
     }
   }
 }

@@ -1,3 +1,61 @@
-<p>
-  principal works!
-</p>
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title> Lista de usuarios </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of usuarios$ | async">
+      <ion-item>
+        <ion-avatar slot="start">
+          <img
+            src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50"
+            alt="Avatar"
+          />
+        </ion-avatar>
+        <ion-label>
+          <h2>{{ item.nombre }} {{ item.apellido }}</h2>
+          <p>CC. {{ item.DNI }}</p>
+          <p>Rol: {{ item.rolId }}</p>
+        </ion-label>
+
+        <!-- Indicador de scroll -->
+        <div class="box">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option
+          color="success"
+          [routerLink]="['/usuarios/ver', item.idUsuario]"
+        >
+          <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+
+        <ion-item-option
+          color="warning"
+          [routerLink]="['/usuarios/editar', item.idUsuario]"
+        >
+          <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+
+        <ion-item-option color="danger" (click)="onClickDelete(item)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="dark" [routerLink]="['/usuarios', 'nuevo']">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

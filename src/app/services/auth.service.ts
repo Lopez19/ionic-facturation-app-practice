@@ -14,7 +14,11 @@ export class AuthService {
   constructor(
     private appStorageService: StorageService,
     private router: Router
-  ) {}
+  ) {
+    (async () => {
+      await this.voToken();
+    })();
+  }
 
   async login(username: string, password: string) {
     const options = {
@@ -39,16 +43,36 @@ export class AuthService {
   }
 
   public async voToken() {
-    const token = await this.appStorageService.get('token');
-    if (!token) {
-      this.router.navigate(['/login']);
+    try {
+      this.appStorageService.isInit$.subscribe((isInit) => {
+        if (isInit) {
+          (async () => {
+            const token = await this.appStorageService.get('token');
+
+            if (token) {
+              this._loggedIn.next(true);
+              console.log('con token');
+              await this.router.navigate(['/home']);
+            } else {
+              this._loggedIn.next(false);
+              console.log('no token');
+
+              await this.router.navigate(['/login']);
+            }
+          })();
+        }
+      });
+    } catch (error) {
+      console.log(error);
     }
-    return token;
   }
 
   public async logout() {
-    await this.appStorageService.clear();
+    await this.appStorageService.remove('token');
+    await this.appStorageService.remove('user');
+    await this.appStorageService.remove('mensaje');
+
     this._loggedIn.next(false);
-    this.router.navigate(['/login']);
+    await this.router.navigateByUrl('/login');
   }
 }

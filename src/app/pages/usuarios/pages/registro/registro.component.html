@@ -1,3 +1,184 @@
-<p>
-  registro works!
-</p>
+<ion-header>
+  <ion-toolbar color="success">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title> Add Usuario </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="form_registro" (ngSubmit)="onClickRegistrar()">
+        <ion-item class="ion-margin-bottom">
+          <ion-label position="floating">Nombre</ion-label>
+
+          <ion-input
+            type="text"
+            formControlName="nombre"
+            placeholder="Example: Juan"
+          ></ion-input>
+
+          <ion-icon
+            name="close-circle-outline"
+            slot="end"
+            color="danger"
+            *ngIf="nombreNoValido"
+          ></ion-icon>
+
+          <ion-icon
+            name="checkmark-circle-outline"
+            slot="end"
+            color="success"
+            *ngIf="!nombreNoValido"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-item class="ion-margin-bottom">
+          <ion-label position="floating">Apellido</ion-label>
+
+          <ion-input
+            type="text"
+            formControlName="apellido"
+            placeholder="Example: Perez"
+          ></ion-input>
+
+          <ion-icon
+            name="close-circle-outline"
+            slot="end"
+            color="danger"
+            *ngIf="apellidoNoValido"
+          ></ion-icon>
+
+          <ion-icon
+            name="checkmark-circle-outline"
+            slot="end"
+            color="success"
+            *ngIf="!apellidoNoValido"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-item class="ion-margin-bottom">
+          <ion-label position="floating">Password</ion-label>
+
+          <ion-input type="password" formControlName="password"></ion-input>
+
+          <ion-icon
+            name="close-circle-outline"
+            slot="end"
+            color="danger"
+            *ngIf="passwordNoValido"
+          ></ion-icon>
+
+          <ion-icon
+            name="checkmark-circle-outline"
+            slot="end"
+            color="success"
+            *ngIf="!passwordNoValido"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-item class="ion-margin-bottom">
+          <ion-label position="floating">Rol</ion-label>
+
+          <ion-select formControlName="rolId">
+            <ion-select-option
+              *ngFor="let rol of roles$ | async"
+              [value]="rol.idRol"
+            >
+              {{ rol.nombre }}
+            </ion-select-option>
+          </ion-select>
+
+          <ion-icon
+            name="close-circle-outline"
+            slot="end"
+            color="danger"
+            *ngIf="rolIdNoValido"
+          ></ion-icon>
+
+          <ion-icon
+            name="checkmark-circle-outline"
+            slot="end"
+            color="success"
+            *ngIf="!rolIdNoValido"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-item class="ion-margin-bottom">
+          <ion-label position="floating">DNI</ion-label>
+
+          <ion-input type="number" formControlName="DNI"></ion-input>
+
+          <ion-icon
+            name="close-circle-outline"
+            slot="end"
+            color="danger"
+            *ngIf="DNINoValido"
+          ></ion-icon>
+
+          <ion-icon
+            name="checkmark-circle-outline"
+            slot="end"
+            color="success"
+            *ngIf="!DNINoValido"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-item class="ion-margin-bottom">
+          <ion-label position="floating">Username</ion-label>
+
+          <ion-input type="text" formControlName="username"></ion-input>
+
+          <ion-icon
+            name="close-circle-outline"
+            slot="end"
+            color="danger"
+            *ngIf="usernameNoValido"
+          ></ion-icon>
+
+          <ion-icon
+            name="checkmark-circle-outline"
+            slot="end"
+            color="success"
+            *ngIf="!usernameNoValido"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-item class="ion-margin-bottom">
+          <ion-label position="floating">Correo Electronico</ion-label>
+
+          <ion-input
+            type="email"
+            formControlName="email"
+            placeholder="Example: example@example.com"
+          ></ion-input>
+
+          <ion-icon
+            name="close-circle-outline"
+            slot="end"
+            color="danger"
+            *ngIf="emailNoValido"
+          ></ion-icon>
+
+          <ion-icon
+            name="checkmark-circle-outline"
+            slot="end"
+            color="success"
+            *ngIf="!emailNoValido"
+          ></ion-icon>
+        </ion-item>
+
+        <ion-button
+          expand="block"
+          color="success"
+          type="submit"
+          [disabled]="form_registro.invalid"
+        >
+          Save User
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

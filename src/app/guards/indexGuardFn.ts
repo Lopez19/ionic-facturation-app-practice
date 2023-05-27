@@ -1,25 +1,22 @@
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { tap } from 'rxjs';
-import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
-
-export const isLoggedGuardFn: CanActivateFn = () => {
-  const router = inject(Router);
-  return inject(AuthService).loggedIn$.pipe(
-    tap((res) => {
-      if (!res) {
-        router.navigate(['login']);
-      }
-    })
-  );
-};
+import { CanMatchFn, Router } from '@angular/router';
 
 export const canMatchGuardFn: CanMatchFn = () => {
   const router = inject(Router);
-  return inject(AuthService).loggedIn$.pipe(
+  const loggedIn$ = inject(AuthService).loggedIn$;
+
+  const redirect = async () => {
+    await router.navigate(['/login']);
+  };
+
+  return loggedIn$.pipe(
     tap((res) => {
       if (!res) {
-        router.navigate(['login']);
+        (async () => {
+          await redirect();
+        })();
       }
     })
   );

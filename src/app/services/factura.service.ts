@@ -9,7 +9,7 @@ export class FacturaService {
     {
       id: 1,
       fecha: '2020-01-01',
-      cliente: '1235139731',
+      cliente: '28469546',
       imageUrl: 'https://picsum.photos/200/300',
       description: [
         {

@@ -1,19 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import { Subject } from 'rxjs';
+import { IRemove } from '../interfaces/storage.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
   private _storage: Storage | null = null;
+  private _isInit$ = new Subject<boolean>();
+  isInit$ = this._isInit$.asObservable();
 
   constructor(private storage: Storage) {
-    this.init();
+    this.init().catch((error) => console.log(error));
   }
 
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
+    this._isInit$.next(true);
+
+    console.log('Storage ready!');
   }
 
   public async set(key: string, value: any) {

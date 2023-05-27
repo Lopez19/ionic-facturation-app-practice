@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title> Ver {{ user.username }} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <img
+      src="https://ionicframework.com/docs/demos/api/avatar/avatar.svg"
+      alt="avatar"
+    />
+    <ion-card-header>
+      <ion-card-title> {{ user.nombre }} {{ user.apellido }} </ion-card-title>
+      <ion-card-subtitle> Rol: {{ user.rolId }} </ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title> {{ "Datos Personales" }} </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item>
+          <ion-label>DNI</ion-label>
+          <ion-input type="number" [value]="user.DNI" disabled></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Nombre</ion-label>
+          <ion-input
+            type="text"
+            value="{{ user.nombre }} {{ user.apellido }}"
+            disabled
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>Correo</ion-label>
+          <ion-input type="text" [value]="user.email" disabled></ion-input>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

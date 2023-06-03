@@ -33,13 +33,13 @@ export class AuthService {
       },
     };
 
-    const response: HttpResponse = await CapacitorHttp.post(options);
+    const { data, status }: HttpResponse = await CapacitorHttp.post(options);
 
-    if (response.status === 200) {
+    if (status === 200) {
       this._loggedIn.next(true);
     }
 
-    return response;
+    return data;
   }
 
   public async voToken() {

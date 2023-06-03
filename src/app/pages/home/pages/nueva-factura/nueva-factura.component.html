@@ -1,0 +1,271 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <ion-title> Nueva Factura </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content mode="ios" class="ion-padding">
+  <!-- Formulario -->
+  <form [formGroup]="factura" (ngSubmit)="onSubmit()">
+    <!-- Remitente -->
+    <ion-card mode="ios">
+      <ion-card-header color="primary">
+        <ion-card-title>Datos del remitente</ion-card-title>
+      </ion-card-header>
+      <ion-card-content formGroupName="encabezado">
+        <ion-grid formGroupName="Emisor">
+          <ion-row>
+            <ion-col size="12" sizeMd="6">
+              <ion-item mode="ios" lines="none">
+                <ion-label position="floating">RUT Emisor</ion-label>
+                <ion-input
+                  formControlName="RUTEmisor"
+                  type="text"
+                  [value]="remitente.DNI"
+                  readonly
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="6">
+              <ion-item mode="ios" lines="none">
+                <ion-label position="floating">Razon Social</ion-label>
+                <ion-input
+                  formControlName="RznSocEmi"
+                  type="text"
+                  [value]="remitente.nombre + ' ' + remitente.apellido"
+                  readonly
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Receptor -->
+    <ion-card mode="ios">
+      <ion-card-header color="medium">
+        <ion-card-title>Datos del Receptor</ion-card-title>
+      </ion-card-header>
+      <ion-card-content formGroupName="encabezado">
+        <ion-grid formGroupName="Receptor">
+          <ion-row>
+            <ion-col size="12">
+              <ion-item lines="none" mode="ios">
+                <ion-label>RUT Receptor</ion-label>
+
+                <ion-select
+                  mode="ios"
+                  interface="action-sheet"
+                  formControlName="RUTRecep"
+                  placeholder="Seleccione un receptor"
+                  (ionChange)="handleChange($event)"
+                >
+                  <ion-select-option
+                    *ngFor="let receptor of usuarios$ | async"
+                    [value]="receptor.DNI"
+                  >
+                    {{ receptor.nombre }}
+                    {{ receptor.apellido | slice : 0 : 8 }} >
+                    {{ receptor.DNI }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="RznSocRecep">
+            <ion-col size="12">
+              <ion-item lines="none" mode="ios">
+                <ion-label position="floating">Razon Social</ion-label>
+                <ion-input
+                  formControlName="RznSocRecep"
+                  type="text"
+                  readonly
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="DirRecep">
+            <ion-col size="6">
+              <ion-item lines="none" mode="ios">
+                <ion-label position="floating">Direccion</ion-label>
+                <ion-input
+                  formControlName="DirRecep"
+                  type="text"
+                  readonly
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item lines="none" mode="ios">
+                <ion-label position="floating">Ciudad</ion-label>
+                <ion-input
+                  formControlName="CiudadRecep"
+                  type="text"
+                  readonly
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Detalle -->
+    <ion-card mode="ios">
+      <ion-card-header color="warning">
+        <ion-card-title>Detalle</ion-card-title>
+      </ion-card-header>
+
+      <!-- Boton add item -->
+      <ion-button fill="clear" (click)="addItem()" mode="ios">
+        Add <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+
+      <ion-card-content
+        *ngIf="detalle.length > 0"
+        formArrayName="detalle"
+        class="ion-no-padding ion-padding-bottom ion-padding-horizontal"
+      >
+        <ion-accordion-group expand="inset" mode="ios" class="ion-no-margin">
+          <ion-accordion *ngFor="let item of detalle.controls; let i = index">
+            <ion-item slot="header" color="light">
+              <ion-label
+                >{{ i + 1 }} - {{ item.value.DscItem | titlecase }}</ion-label
+              >
+              <p>Cantidad: {{ item.value.QtyItem | number }}</p>
+              <!-- Boton delete item -->
+              <ion-button
+                fill="clear"
+                color="danger"
+                (click)="removeItem(i)"
+                slot="end"
+                mode="ios"
+              >
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+
+            <div class="ion-no-padding" slot="content">
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="12" sizeMd="6">
+                    <ion-item lines="none">
+                      <ion-label position="floating">
+                        Precio Unitario
+                      </ion-label>
+                      <ion-input
+                        type="text"
+                        readonly="true"
+                        [value]="item.value.PrcItem | currency"
+                      ></ion-input>
+                    </ion-item>
+                  </ion-col>
+
+                  <ion-col size="12" sizeMd="6">
+                    <ion-item lines="none">
+                      <ion-label position="floating"> SubTotal </ion-label>
+                      <ion-input
+                        type="text"
+                        readonly="true"
+                        [value]="
+                          item.value.PrcItem * item.value.QtyItem | currency
+                        "
+                      ></ion-input>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Totales -->
+    <ion-card mode="ios">
+      <ion-card-header color="success">
+        <ion-card-title>Totales</ion-card-title>
+      </ion-card-header>
+      <ion-card-content formGroupName="totales">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" sizeMd="4">
+              <ion-item lines="none">
+                <ion-label position="floating">Neto</ion-label>
+                <ion-input
+                  type="text"
+                  readonly="true"
+                  formControlName="MntNeto"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="4">
+              <ion-item lines="none">
+                <ion-label position="floating">
+                  IVA {{ TasaIVA?.value }}
+                </ion-label>
+                <ion-input
+                  type="text"
+                  readonly="true"
+                  formControlName="IVA"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="12" sizeMd="4">
+              <ion-item lines="none">
+                <ion-label position="floating">Total</ion-label>
+                <ion-input
+                  type="text"
+                  readonly="true"
+                  formControlName="MntTotal"
+                ></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Estado -->
+    <ion-card>
+      <ion-card-header color="tertiary">
+        <ion-card-title>Estado</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label>Estado</ion-label>
+          <ion-select placeholder="Select estado" formControlName="estadoId">
+            <ion-select-option
+              *ngFor="let status of estado$ | async"
+              [value]="status.idEstado"
+            >
+              {{ status.nombre | titlecase }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Boton -->
+    <ion-button
+      expand="block"
+      mode="ios"
+      color="primary"
+      type="submit"
+      class="ion-margin"
+      [disabled]="!factura.valid"
+    >
+      Guardar Factura
+    </ion-button>
+  </form>
+</ion-content>

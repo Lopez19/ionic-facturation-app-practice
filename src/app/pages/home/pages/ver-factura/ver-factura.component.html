@@ -1,0 +1,238 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Atras</ion-button>
+    </ion-buttons>
+    <ion-title>Ver Factura No° {{ factura.idFactura }} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Informacion de la factura -->
+  <ion-card>
+    <ion-card-header color="primary">
+      <ion-card-title>Factura No°</ion-card-title>
+      <ion-card-subtitle>{{ factura.idFactura }}</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content class="ion-no-padding">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="floating">Fecha</ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                value="35/may/2023"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="floating"> Total </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                [value]="factura.totales.MntTotal | currency"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Informacion del cliente y del Emisor -->
+  <ion-card>
+    <ion-card-header color="medium">
+      <ion-card-title>Datos Personales</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="ion-no-padding">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="floating"> Rut Emisor </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                value="{{ factura.encabezado.Emisor.RUTEmisor }}"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-label position="floating"> Razon Social </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                value="{{ factura.encabezado.Emisor.RznSocEmi }}"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-item lines="none">
+              <ion-label position="floating"> Rut Cliente </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                value="{{ factura.encabezado.Receptor.RUTRecep }}"
+              ></ion-input>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-label position="floating"> Razon Social </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                value="{{ factura.encabezado.Receptor.RznSocRecep }}"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12">
+            <ion-item lines="none">
+              <ion-label position="floating"> Direecion </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                value="{{ factura.encabezado.Receptor.DirRecep }} - {{
+                  factura.encabezado.Receptor.CiudadRecep
+                }}"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Detalle de la factura -->
+  <ion-card>
+    <ion-card-header color="success">
+      <ion-card-title>Detalle Factura</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="ion-no-padding">
+      <ion-accordion-group expand="inset">
+        <ion-accordion *ngFor="let item of factura.detalle; let i = index">
+          <ion-item slot="header" color="light">
+            <ion-label>{{ i + 1 }} - {{ item.nombre | titlecase }}</ion-label>
+            <p>Cantidad: {{ item.QtyItem | number }}</p>
+          </ion-item>
+
+          <div class="ion-no-padding" slot="content">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-item lines="none">
+                    <ion-label position="floating"> Precio Unitario </ion-label>
+                    <ion-input
+                      type="text"
+                      readonly="true"
+                      [value]="item.PrcItem | currency"
+                    ></ion-input>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col size="6">
+                  <ion-item lines="none">
+                    <ion-label position="floating"> SubTotal </ion-label>
+                    <ion-input
+                      type="text"
+                      readonly="true"
+                      [value]="item.PrcItem * item.QtyItem | currency"
+                    ></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Totales de la factura -->
+  <ion-card>
+    <ion-card-header color="warning">
+      <ion-card-title>Totales</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="ion-no-padding">
+      <ion-grid class="ion-no-margin">
+        <ion-row>
+          <ion-col size="12" sizeMd="6">
+            <ion-item lines="none">
+              <ion-label position="floating"> Neto </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                [value]="factura.totales.MntNeto | currency"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="12" sizeMd="6">
+            <ion-item lines="none">
+              <ion-label position="floating"> Tasa IVA </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                [value]="factura.totales.TasaIVA"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12" sizeMd="6">
+            <ion-item lines="none">
+              <ion-label position="floating"> IVA </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                [value]="factura.totales.IVA | currency"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="12" sizeMd="6">
+            <ion-item lines="none">
+              <ion-label position="floating"> Total </ion-label>
+              <ion-input
+                type="text"
+                readonly="true"
+                [value]="factura.totales.MntTotal | currency"
+              ></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Codigo de barras -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Codigo</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <svg id="barcode"></svg>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="factura.estado === 'pendiente'">
+    <ion-button (click)="pagar()" expand="block" color="success">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Pagar
+    </ion-button>
+  </ion-card>
+</ion-content>

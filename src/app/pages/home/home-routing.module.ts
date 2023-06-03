@@ -1,3 +1,4 @@
+import { NuevaFacturaComponent } from './pages/nueva-factura/nueva-factura.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomePage } from './home.page';
@@ -8,9 +9,12 @@ const routes: Routes = [
     component: HomePage,
   },
   {
-    path: 'fac-detail/:idFactura',
-    loadChildren: async () =>
-      (await import('./fac-detail/fac-detail.module')).FacDetailPageModule,
+    path: 'nueva-factura',
+    component: NuevaFacturaComponent,
+  },
+  {
+    path: '**',
+    redirectTo: '',
   },
 ];
 

@@ -11,11 +11,13 @@ import { StorageService } from './storage.service';
 })
 export class CategoriasService {
   private _categorias = new BehaviorSubject<ICategoria[]>([]);
-  public categorias$ = this._categorias.asObservable();
+  categorias$ = this._categorias.asObservable();
 
   // Constructor
   constructor(private appStorageService: StorageService) {
-    this.getCategorias().catch((error) => console.log(error));
+    (async () => {
+      await this.getCategorias();
+    })();
   }
 
   // Metodos

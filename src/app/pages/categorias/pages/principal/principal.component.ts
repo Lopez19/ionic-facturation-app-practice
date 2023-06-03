@@ -23,12 +23,14 @@ export class PrincipalComponent implements OnInit {
 
   // Eventos
   ngOnInit() {
-    this.categoriasService.getCategorias();
+    (async () => {
+      await this.categoriasService.getCategorias();
+    })();
   }
 
   // Metodos
-  onClickDelete(catId: number | undefined) {
-    this.alerCrtl
+  async onClickDelete(catId: number | undefined) {
+    await this.alerCrtl
       .create({
         header: 'Eliminar',
         message: '¿Está seguro de eliminar esta categoria?',
@@ -43,7 +45,9 @@ export class PrincipalComponent implements OnInit {
           {
             text: 'Eliminar',
             handler: () => {
-              this.__eliminarCat(catId);
+              (async () => {
+                await this.__eliminarCat(catId);
+              })();
             },
           },
         ],

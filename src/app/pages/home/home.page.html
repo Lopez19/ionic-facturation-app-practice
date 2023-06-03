@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" mode="ios">
   <ion-toolbar>
     <ion-buttons slot="end">
       <ion-button (click)="logout()">
@@ -18,19 +18,29 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list mode="ios">
     <ion-item
-      *ngFor="let factura of facturas"
-      [routerLink]="['/home/fac-detail', factura.id]"
+      *ngFor="let factura of facturas$ | async"
+      button
+      (click)="onClickFactura(factura)"
     >
       <ion-avatar slot="start">
-        <img [src]="factura.imageUrl" alt="{{ factura.cliente }}" />
+        <img src="http://placekitten.com/g/200/300" alt="1" />
       </ion-avatar>
       <ion-label>
-        <h2>{{ factura.cliente }}</h2>
-        <p>{{ factura.fecha | date: 'dd/MM/yyyy' }}</p>
+        <h2>{{ factura.encabezado.Receptor.RznSocRecep | titlecase }}</h2>
+        <p>CC: {{ factura.encabezado.Receptor.RUTRecep }}</p>
+        <p>
+          {{ factura.encabezado.Receptor.DirRecep }} - {{
+          factura.encabezado.Receptor.CiudadRecep }}
+        </p>
+        <ion-badge color="success">
+          {{ factura.estado | titlecase }}
+        </ion-badge>
       </ion-label>
-      <ion-note slot="end">{{ factura.total | currency: 'USD' }} USD</ion-note>
+      <ion-note slot="end" color="primary">
+        {{ factura.totales.MntTotal | currency }}
+      </ion-note>
     </ion-item>
   </ion-list>
 
@@ -46,7 +56,7 @@
 
     <ion-fab-list side="top" activated="true">
       <!-- Boton para facturas -->
-      <ion-fab-button color="primary" [routerLink]="['/home/factura', 'nueva']">
+      <ion-fab-button color="primary" [routerLink]="['/home/nueva-factura']">
         <ion-icon name="document-text"></ion-icon>
       </ion-fab-button>
 

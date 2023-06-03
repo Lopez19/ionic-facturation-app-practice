@@ -1,3 +1,90 @@
-<p>
-  principal works!
-</p>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title> Listado de productos </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-accordion-group>
+    <ion-accordion color="primary" *ngFor="let producto of productos$ | async">
+      <ion-item slot="header" color="light">
+        <ion-thumbnail slot="start">
+          <img src="https://www.picsum.photos/200/300" alt="1" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ producto.nombre | titlecase }}</h2>
+          <p>Categoria: {{ producto.categoriaId }}</p>
+        </ion-label>
+      </ion-item>
+
+      <div class="ion-padding" slot="content">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Detalle</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <p>{{ producto.detalle }}</p>
+
+            <ion-chip
+              color="primary"
+              mode="ios"
+              outline="true"
+              class="ion-margin-top"
+            >
+              <ion-icon name="cash-outline"></ion-icon>
+              <ion-label>
+                Precio:
+                <strong>
+                  {{ producto.precio | currency }}
+                </strong>
+              </ion-label>
+            </ion-chip>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Acciones</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content class="ion-text-center">
+            <ion-button
+              color="primary"
+              mode="ios"
+              fill="outline"
+              class="ion-margin-end"
+              [routerLink]="['/productos/edit', producto.idproducto]"
+            >
+              <ion-icon name="create-outline"></ion-icon>
+              <ion-label>Editar</ion-label>
+            </ion-button>
+
+            <ion-button
+              color="danger"
+              mode="ios"
+              fill="outline"
+              (click)="deleteProducto(producto)"
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+              <ion-label>Eliminar</ion-label>
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button
+      color="primary"
+      mode="ios"
+      [routerLink]="['/productos', 'nuevo']"
+    >
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

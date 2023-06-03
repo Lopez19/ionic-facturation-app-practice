@@ -1,3 +1,72 @@
-<p>
-  principal works!
-</p>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title> Zona de Stock </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngIf="(stock$ | async)?.length !== 0; else NoStokItem">
+      <ion-col
+        size="6"
+        size-md="3"
+        *ngFor="let item of stock$ | async; let i = index"
+      >
+        <ion-card
+          button
+          (click)="goToStockActions(item)"
+          mode="ios"
+          class="ion-no-margin"
+        >
+          <img src="https://www.picsum.photos/1024/512" alt="1" />
+          <ion-card-header>
+            <ion-card-title>Stock {{ i + 1 }}</ion-card-title>
+            <ion-card-subtitle>{{ item.nombre | titlecase }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list lines="none" class="ion-text-center">
+              <ion-item
+                *ngIf="item.cantidad > 0; else noStock"
+                class="ion-no-padding"
+              >
+                <ion-label>Cantidad: </ion-label>
+                <ion-note slot="end">{{ item.cantidad | number }}</ion-note>
+              </ion-item>
+
+              <ng-template #noStock>
+                <ion-text color="danger">Sin Stock</ion-text>
+              </ng-template>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ng-template #NoStokItem>
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <ion-card mode="ios">
+            <img
+              src="https://media.tenor.com/J3mNIbj6A4wAAAAd/empty-shelves-john-travolta.gif"
+              alt="1"
+              width="500"
+            />
+            <ion-card-header>
+              <ion-card-title>Ups!</ion-card-title>
+              <ion-card-subtitle>Al parecer no hay stock</ion-card-subtitle>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ng-template>
+  </ion-grid>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openModalCreate()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,3 +1,64 @@
-<p>
-  nuevo-item works!
-</p>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="medium" (click)="cancel()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>Add Stock</ion-title>
+    <ion-buttons slot="end">
+      <ion-button
+        color="success"
+        (click)="onSubmit()"
+        [strong]="true"
+        [disabled]="data.invalid"
+      >
+        Crear
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="data" (ngSubmit)="onSubmit()">
+    <ion-card>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">
+            Producto
+            <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-select
+            required
+            interface="action-sheet"
+            mode="ios"
+            formControlName="productoId"
+            placeholder="Seleccione un producto"
+          >
+            <ion-select-option
+              *ngFor="let producto of productos$ | async"
+              [value]="producto.idproducto"
+            >
+              {{ producto.nombre | titlecase }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="productoId">
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="floating">
+            Cantidad
+            <ion-text color="danger">*</ion-text>
+          </ion-label>
+          <ion-input
+            required
+            formControlName="cantidad"
+            type="number"
+            min="0"
+          ></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </form>
+</ion-content>

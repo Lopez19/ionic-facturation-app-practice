@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Subject } from 'rxjs';
-import { IRemove } from '../interfaces/storage.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +11,9 @@ export class StorageService {
   isInit$ = this._isInit$.asObservable();
 
   constructor(private storage: Storage) {
-    this.init().catch((error) => console.log(error));
+    (async () => {
+      await this.init();
+    })();
   }
 
   async init() {

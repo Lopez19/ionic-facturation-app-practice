@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { DEFAULT_CURRENCY_CODE, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -22,7 +22,10 @@ import { Drivers } from '@ionic/storage';
       driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage],
     }),
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: DEFAULT_CURRENCY_CODE, useValue: 'COP ' },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

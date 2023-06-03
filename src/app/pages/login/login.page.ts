@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -13,7 +14,8 @@ export class LoginPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private appStorageService: StorageService
+    private appStorageService: StorageService,
+    private toastCtrl: ToastController
   ) {}
 
   regex_username = '^[a-zA-Z0-9]{6,}$';
@@ -42,13 +44,23 @@ export class LoginPage implements OnInit {
 
       const res = await this.authService.login(this.username, this.password);
 
-      if (res.data.token && res.data.user) {
+      if (res.token && res.user) {
         // Guardar token en local storage
-        await this.appStorageService.set('token', res.data.token);
-        await this.appStorageService.set('user', JSON.stringify(res.data.user));
+        await this.appStorageService.set('token', res.token);
+        await this.appStorageService.set('user', JSON.stringify(res.user));
 
         // Redireccionar a home
         await this.router.navigate(['/home']);
+        this.form_login.reset();
+      } else {
+        const toast = await this.toastCtrl.create({
+          message: res.error.message,
+          duration: 2000,
+          color: 'danger',
+          position: 'top',
+        });
+        await toast.present();
+
         this.form_login.reset();
       }
     } else {
